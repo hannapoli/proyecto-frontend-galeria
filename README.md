@@ -1,1 +1,1 @@
-# proyecto-frontend-galeria
+# Proyecto Frontend - Galería de Imágenes
