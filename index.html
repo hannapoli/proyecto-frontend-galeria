@@ -9,55 +9,52 @@
 </head>
 
 <body>
-    <header>
-        <div class="headerPrincipal">
-            <p class="tituloWeb">Galería Pexels</p>
-            <!--MENÚ DE NAVEGACION-->
-            <nav class="menuNavegacion">
-                <ul>
-                    <li><a href="#" clas="#">Inicio</a></li>
-                    <li><a href="#" clas="#">Favoritos</a></li>
-                </ul>
-            </nav>
-        </div>
-
+    <header class="headerPrincipal">
+        <p class="tituloWeb">Galería Pexels</p>
         <!--BUSCADOR DE IMÁGENES-->
         <form id="BuscadorFotos">
             <input type="text" id="buscador" placeholder="Buscar imágenes" required>
-            <!--DESPLEGABLE SELECCIONAR ORIENTACIÓN----->
-            <select id="orientacion" name="orientacion">
-                <option value="#" disabled selected>Selecciona orientación</option>
-                <option value="#">Todas</option>
-                <option value="#">Horizontales</option>
-                <option value="#">Verticales</option>
-            </select>
-            <button type="submit">Buscar</button>
+            <button type="submit" id="botonBuscar" class="btn botonBuscar">Buscar</button>
         </form>
+        <!--DESPLEGABLE SELECCIONAR ORIENTACIÓN----->
+        <select id="orientacion" name="orientacion">
+            <option value="opciones" disabled selected>Selecciona orientación</option>
+            <option value="todas">Todas</option>
+            <option value="horizontales">Horizontales</option>
+            <option value="verticales">Verticales</option>
+        </select>
+
+        <nav class="menuNavegacion">
+            <ul>
+                <li><a href="pages/favoritos.html" class="favoritos">Favoritos</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main>
         <!--------------------------CATEGORÍAS----------------------------->
-        <nav id="cajaCategorias"> <!--Mostrar 3 categorías de imagenes de forma dinamica, los títulos son fijos -->
+        <section id="cajaCategorias">
             <h2 class="titulo-seccion">Categorías</h2>
-            <div class="categoria">
-                <h3>Naturaleza</h3>
-                <div class="imagenCategoria"><!--IMG DINAMICA NATURALEZA --></div>
-            </div>
-            <div class="categoria">
+            <article class="categoria">
+                <h3>Animales</h3>
+                <div class="imagenCategoria"><img src="assets/img/animales.jpg" alt="tigres en la selva"></div>
+            </article>
+            <article class="categoria">
                 <h3>Comida</h3>
-                <div class="imagenCategoria"><!--IMG DINAMICA COMIDA --></div>
-            </div>
-            <div class="categoria">
-                <h3>Ciudad</h3>
-                <div class="imagenCategoria"><!--IMG DINAMICA CIUDAD --></div>
-            </div>
-        </nav>
+                <div class="imagenCategoria"><img src="assets/img/comida.jpg" alt="bol de frutas"></div>
+            </article>
+            <article class="categoria">
+                <h3>Paises</h3>
+                <div class="imagenCategoria"><img src="assets/img/paises.jpg" alt="torre Eiffel"></div>
+            </article>
+        </section>
 
         <!------------------------GALERIA DE IMAGENES-------------------->
 
         <section id="galeria">
             <h2 class="titulo-seccion">Galería</h2>
-            <div id="tarjetasImagenes">
+            <p id="resultadoImagenes"> <!--input: "se han encontrado X imagenes"--></p>
+            <div id="containerGaleria">
                 <!--Aquí van las tarjetitas de imagenes
                 <article>  
                     <div> <img> </div> 
@@ -85,12 +82,15 @@
         <nav id="paginacion">
             <div id="paginacion-buttons">
                 <!--Meter los números de las páginas de forma dinámica: son tantos botones como págs queremos que se muestren.
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>  -->
+                <button class ="btn btnPaginacion"> < </button>
+                <button class ="btn btnPaginacion"> 2 </button>
+                <button class ="btn btnPaginacion"> > </button>
+            -->
             </div>
         </nav>
+        <a href="#cajaCategorias">Volver al inicio</a>
     </main>
+
 
     <footer>
         <p> &copy; 2025 Hanna y Sonia. Todos los derechos reservados. API de <a href="https://www.pexels.com/api/"
