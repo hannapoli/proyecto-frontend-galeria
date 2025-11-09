@@ -1,29 +1,72 @@
 // ESTRUCTURA DEL PROYECTO:
 document.addEventListener('DOMContentLoaded', () => {
     //VARIABLES
-    //Declarar las variables para capturar los elementos del DOM:
     //input
+    const inputBuscador = document.querySelector('#buscador');
+    console.log(inputBuscador);
     //formulario -> para event listener
+    const formulario = document.querySelector('#BuscadorFotos');
+    console.log(formulario);
     //botón submit
     //selector y sus opciones
     //los 3 articles de categorias de imagenes
     // div containerGaleria
+    const containerGaleria = document.querySelector('#containerGaleria');
     // div paginacion
     //botones paginacion
     // boton añadir favoritos 
     //boton eliminar favoritos
     // fragment
+    const fragment = document.createDocumentFragment();
     // #favoritos para añidir las imagenes favoritas
     const urlBase = `https://api.pexels.com/v1/`;
-    const autorizacion = ``;
+    const autorizacion = `851Ebzs3BlLqHHT4VZBNwGS0F7vmu9UH97VyAfhj9mjWBNZ4FRA4zrjt`; // key de Sonia
     const galeria = document.querySelector('#galeria');
 
     ////en autorizacion poner su token////
 
+    /*
+const arrayPrueba = [
+    {
+        id: 1,
+        src: 'selva1.jpg',
+        alt: 'selva lorem',
+        p: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+    },
+    {
+        id: 2,
+        src: 'selva2.jpg',
+        alt: 'pasarela de madera en el mar',
+        p: 'Consequuntur maxime libero aspernatur sequi quidem deserunt illum praesentium, itaque voluptatibus.',
+    },
+    {
+        id: 1,
+        src: 'selva1.jpg',
+        alt: 'selva lorem',
+        p: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+    },
+    {
+        id: 3,
+        src: 'selva3.jpg',
+        alt: 'pasarela de madera en el mar',
+        p: 'Hola Consequuntur munt illum praesentium, itaque voluptatibus.',
+    },
+];
+*/
 
     //EVENTOS
-
     //Al pulsar el boton buscar que muestre las imagenes - evento de formulario. pintarImagenes()
+
+    formulario.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        const palabra = inputBuscador.value.trim().toLowerCase();
+        validarInput(palabra);
+
+        if (validarInput(palabra)) {
+            pintarImagenes();
+        }
+    });
+
     //Al pulsar la orientacion cambiarOrientacion() y  pintarImagenes() ?
     //Al pulsar cada una de las 3 categorías
     //Añadir a favoritos  añadirFavoritos()
@@ -33,12 +76,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //FUNCIONES
     // 1- Funcion Validar el texto introducido en el buscador:
-    // const validar()
     // Regex: evitar símbolos, números; recortar espacios al principio y al final; pasar todo a minuscula
-    // 
+    // hay que invocarla dentro del evento "pulsar boton buscar"
+    // REVISAR !!!!!!!! -> intentar hacerlo con un bucle cuando la palabra no es válida
+    const validarInput = (texto) => {
+        const regexp = /^[a-záéíóúÁÉÍÓÚüÜñÑ\s]+$/gi;
 
+        if (!regexp.test(texto)) {
+            alert("El texto no es válido. Solo se permiten letras y espacios.");
+        } else {
+            return true; // válido
+        }
+    }
     const escribirError = (error) => {
-        galeria.innerHTML = '';
+        galeria.innerHTML = ''; // duda: el mensaje de error se va a escribir en "galeria o containerGaleria??"
         const errorMsg = document.createElement('P');
         errorMsg.textContent = error.message;
         //crear esta clase y editarla en CSS (grande)
@@ -77,28 +128,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3- Funcion Pintar imagenes:
     const pintarImagenes = async () => {
-        const fotosTotales = await llamarApi(url, busqueda);
-        console(fotosTotales);
-        //fotosTotales.photos - array de fotos (12)
-        // src.medium
-        //id
-        //alt: alt de photo y descripción (en textContent de p)
-        // photographer
+        try {
+            containerGaleria.innerHTML = ''; // para limpiar imagenes previas - toda la galeria o el container de dentro???
+            const datos = await llamarApi(url, busqueda); // creo que para poder poner 12 fotos tienes que pasar 1º el parametro perPage = 12, en la funcion llamarApi y aquí seria (url, busqueda, 12)
+            console.log(fotosTotales);
+            const fotosTotales = datos.photos;
+
+            if (!fotosTotales || fotosTotales.length === 0) {  // si no existe, es null o indefined----o el array está vacío
+                escribirError();
+                return; // se para la función
+            }
+            fotosTotales.forEach((foto => {
+                const article = document.createElement('ARTICLE');
+                const div = document.createElement('DIV');
+                const imagen = document.createElement('IMG')
+                const pAutor = document.createElement('P');
+                const pDescripcion = document.createElement('P');
+                const botonFavoritos = document.createElement('BUTTON');
+                imagen.src = foto.src.medium; //revisar lo de medium
+                imagen.alt = foto.alt;
+                //imagen.classList.add(); (estilo CSS: flexbox etc)
+                pAutor.textContent = `Autor:${foto.photographer} `;
+                pDescripcion.textContent = foto.alt;
+                botonFavoritos.textContent = "♡";
+                botonFavoritos.classList.add('btn');
+                div.append(imagen);
+                article.append(div, pAutor, pDescripcion, botonFavoritos);
+                fragment.append(article);
+            }));
+            containerGaleria.append(fragment); // o toda la galeria???
+        } catch (error) {
+            escribirError();
+        }
     }
+
+    pintarImagenes()
+
     // llamar a la funcion -> validar()
     //comprobar si no es valido -> hacer un bucle para enviar un mensaje para que introduzca datos validos
     //Si valido -> llamar API
-    //BUCLE forEach para crear elementos en el DOM:
-    //ARTICLE
-    //DIV
-    //IMG: asignarle alt, src, clase CSS
-    //2 párrafos
-    //button favoritos
-    //Meter img dentro de div
-    //Meter dentro de article: div, ps y button
-    //Meter article en fragment
-    //Fuera del bucle meter fragment en containerGaleria
-
+    //BUCLE forEach para crear elementos en el DOM
+    /*
+   Corazón relleno 
+   &#9829;   ♥
+   
+   Corazón vacío
+   &#9825;   ♡
+   */
     // 4- Funcion cambiarOrientacion()
 
     // 5- Funcion añadirFavoritos()
