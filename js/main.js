@@ -1,24 +1,20 @@
 // ESTRUCTURA DEL PROYECTO:
 document.addEventListener('DOMContentLoaded', () => {
     //VARIABLES
-    //input
     const inputBuscador = document.querySelector('#buscador');
-    console.log(inputBuscador);
-    //formulario -> para event listener
+    //console.log(inputBuscador);
     const formulario = document.querySelector('#BuscadorFotos');
-    console.log(formulario);
-    //botón submit
+    //console.log(formulario);
+    const botonBuscar = document.querySelector('botonBuscar');//botón submit
     //selector y sus opciones
-    //los 3 articles de categorias de imagenes
-    // div containerGaleria
+    //los 3 articles de categorias de imagenes: hay que darles un id en html!!
     const containerGaleria = document.querySelector('#containerGaleria');
     // div paginacion
     //botones paginacion
     // boton añadir favoritos 
     //boton eliminar favoritos
-    // fragment
-    const fragment = document.createDocumentFragment();
     // #favoritos para añidir las imagenes favoritas
+    const fragment = document.createDocumentFragment();
     const urlBase = `https://api.pexels.com/v1/`;
     const autorizacion = `851Ebzs3BlLqHHT4VZBNwGS0F7vmu9UH97VyAfhj9mjWBNZ4FRA4zrjt`; // key de Sonia
     const galeria = document.querySelector('#galeria');
@@ -60,8 +56,6 @@ const arrayPrueba = [
     formulario.addEventListener("submit", (ev) => {
         ev.preventDefault();
         const palabra = inputBuscador.value.trim().toLowerCase();
-        validarInput(palabra);
-
         if (validarInput(palabra)) {
             pintarImagenes();
         }
@@ -98,7 +92,7 @@ const arrayPrueba = [
     }
 
     // 2- Funcion llamar a la API
-    //Variables temporales
+    //Variables temporales = para probar si funciona !!!!
     const url = `search`;
     let busqueda = `gato`;
 
@@ -131,11 +125,11 @@ const arrayPrueba = [
         try {
             containerGaleria.innerHTML = ''; // para limpiar imagenes previas - toda la galeria o el container de dentro???
             const datos = await llamarApi(url, busqueda); // creo que para poder poner 12 fotos tienes que pasar 1º el parametro perPage = 12, en la funcion llamarApi y aquí seria (url, busqueda, 12)
-            console.log(fotosTotales);
             const fotosTotales = datos.photos;
+            console.log(fotosTotales);
 
             if (!fotosTotales || fotosTotales.length === 0) {  // si no existe, es null o indefined----o el array está vacío
-                escribirError();
+                escribirError({ message: 'No se encontraron imágenes' });
                 return; // se para la función
             }
             fotosTotales.forEach((foto => {
@@ -148,7 +142,7 @@ const arrayPrueba = [
                 imagen.src = foto.src.medium; //revisar lo de medium
                 imagen.alt = foto.alt;
                 //imagen.classList.add(); (estilo CSS: flexbox etc)
-                pAutor.textContent = `Autor:${foto.photographer} `;
+                pAutor.textContent = `Autor: ${foto.photographer} `;
                 pDescripcion.textContent = foto.alt;
                 botonFavoritos.textContent = "♡";
                 botonFavoritos.classList.add('btn');
@@ -171,7 +165,6 @@ const arrayPrueba = [
     /*
    Corazón relleno 
    &#9829;   ♥
-   
    Corazón vacío
    &#9825;   ♡
    */
@@ -183,14 +176,27 @@ const arrayPrueba = [
     // una funcion getLocalStorage
     // una funcion setLocalStorage
 
+    /*const añadirFavoritos = () => {
+        let favoritos = JSON.parse(localStorage.getItem("favoritos")) || []; 
+        // 1º Ver si hay algo en favoritos: localStorage.getItem devuelve string JSON o null si no hay nada 
+        // con .parse se convierte en array de objs
+        // si es null creamos un array vacio
+        if () {
+
+        }
+        localStorage.setItem("favoritos", JSON.stringify(favoritos));
+        //actualiza el array  y lo guarda en localStorage
+    }
+        */
+
     // 6- Funcion pintarFavoritos() dudas: reutilzar pintarImagenes() ??
+
 
     //7- Funcion eliminarFavoritos()
     //Mirar local storage, buscar la imagen y eliminarla
     //Volver a pintar
 
     // 8- Funcion cambiarPagina()
-
 
     //INVOCACIONES
 
