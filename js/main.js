@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //quitar de aquí y mover al eventListener o en la función de pintar
-    llamarApi(url, busqueda);
+    // llamarApi(url, busqueda);
 
     //Pintamos las fotos debajo de categorías
 

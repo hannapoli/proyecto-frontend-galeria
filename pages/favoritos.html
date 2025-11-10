@@ -9,48 +9,49 @@
 </head>
 
 <body>
-    <header>
-        <div class="headerPrincipal">
-            <p class="tituloWeb">Galería Pexels</p>
-            <!--MENÚ DE NAVEGACION-->
+    <header class="headerFavoritos fullContainer flexContainer">
+        <p class="tituloWeb">Galería</p>
+        <!--MENÚ DE NAVEGACION-->
             <nav class="menuNavegacion">
                 <ul>
-                    <li><a href="../index.html" class="#">Volver al Inicio</a></li>
+                    <li><a href="../index.html" class="headerVolver">Volver al Inicio</a></li>
                 </ul>
             </nav>
-        </div>
     </header>
-    <main>
+    <main class="mainContainer">
         <h1>Favoritos</h1>
-        <section id="favoritos">
-                <!--Aquí van las tarjetitas de imagenes
-                <article>  
-                    <div> <img> </div> 
+        <section id="favoritos" class="containerGaleria">
+               <!-- Aquí van las tarjetitas de imagenes -->
+                <article class="articleImg">  
+                    <div> <img src="../assets/img/animales.jpg"> </div> 
                     <p>DESCRIPCION</p> 
                     <p>AUTOR...</p> 
-                    <button>Eliminar</button> 
+                    <button class="btn elimBtn">ELIMINAR</button> 
                 </article>
 
-                <article>  
-                    <div> <img> </div> 
+                <article class="articleImg">  
+                    <div> <img src="../assets/img/animales.jpg"> </div> 
                     <p>DESCRIPCION</p> 
                     <p>AUTOR...</p> 
-                    <button>Eliminar</button> 
+                    <button class="btn elimBtn">ELIMINAR</button> 
                 </article>
 
-                <article>  
-                    <div> <img> </div> 
+                <article class="articleImg">  
+                    <div> <img src="../assets/img/animales.jpg"> </div> 
                     <p>DESCRIPCION</p> 
                     <p>AUTOR...</p> 
-                    <button>Eliminar</button> 
-                </article> -->
+                    <button class="btn elimBtn">ELIMINAR</button> 
+                </article>
+                 <!-- Aquí acaban las tarjetitas de imagenes -->
         </section>
 
-        <a href="#favoritos">Volver al principio</a>
+        <a href="#favoritos" class="volver">Volver al principio</a>
     </main>
 
-    <footer>
-        <p> &copy; 2025 Hanna y Sonia. Todos los derechos reservados. API de <a href="https://www.pexels.com/api/"
+    <footer class="fullContainer flexContainer">
+        <p> &copy; 2025 Hanna y Sonia</p>
+        <p> Todos los derechos reservados</p>
+        <p> API de <a href="https://www.pexels.com/api/"
                 target="_blank">Pexels</a></p>
     </footer>
     <script src="../js/main.js"></script>

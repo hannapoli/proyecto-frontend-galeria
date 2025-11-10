@@ -9,16 +9,16 @@
 </head>
 
 <body>
-    <header class="headerPrincipal">
-        <p class="tituloWeb">Galería Pexels</p>
+    <header class="headerPrincipal fullContainer flexContainer">
+        <p class="tituloWeb">Galería</p>
         <!--BUSCADOR DE IMÁGENES-->
         <form id="BuscadorFotos">
-            <input type="text" id="buscador" placeholder="Buscar imágenes" required>
+            <input type="text" id="buscador" class="buscador" placeholder="Buscar imágenes" autofocus required>
             <button type="submit" id="botonBuscar" class="btn botonBuscar">Buscar</button>
         </form>
         <!--DESPLEGABLE SELECCIONAR ORIENTACIÓN----->
-        <select id="orientacion" name="orientacion">
-            <option value="opciones" disabled selected>Selecciona orientación</option>
+        <select id="orientacion" class="orientacion" name="orientacion">
+            <option value="opciones" disabled selected>Orientación</option>
             <option value="todas">Todas</option>
             <option value="horizontales">Horizontales</option>
             <option value="verticales">Verticales</option>
@@ -31,22 +31,25 @@
         </nav>
     </header>
 
-    <main>
+    <main class="mainContainer">
+        <h1>Crea tu galería de imágenes</h1>
         <!--------------------------CATEGORÍAS----------------------------->
-        <section id="cajaCategorias">
+        <section id="cajaCategorias" class="flexContainer cajaCategorias">
             <h2 class="titulo-seccion">Categorías</h2>
-            <article class="categoria">
-                <h3>Animales</h3>
-                <div class="imagenCategoria"><img src="assets/img/animales.jpg" alt="tigres en la selva"></div>
-            </article>
-            <article class="categoria">
-                <h3>Comida</h3>
-                <div class="imagenCategoria"><img src="assets/img/comida.jpg" alt="bol de frutas"></div>
-            </article>
-            <article class="categoria">
-                <h3>Paises</h3>
-                <div class="imagenCategoria"><img src="assets/img/paises.jpg" alt="torre Eiffel"></div>
-            </article>
+            <div class="tresCategorias flexContainer">
+                <article class="categoria flexContainer">
+                    <h3>Animales</h3>
+                    <div class="imagenCategoria"><img src="assets/img/animales.jpg" alt="tigres en la selva"></div>
+                </article>
+                <article class="categoria flexContainer">
+                    <h3>Comida</h3>
+                    <div class="imagenCategoria"><img src="assets/img/comida.jpg" alt="bol de frutas"></div>
+                </article>
+                <article class="categoria flexContainer">
+                    <h3>Paises</h3>
+                    <div class="imagenCategoria"><img src="assets/img/paises.jpg" alt="torre Eiffel"></div>
+                </article>
+            </div>
         </section>
 
         <!------------------------GALERIA DE IMAGENES-------------------->
@@ -54,28 +57,29 @@
         <section id="galeria">
             <h2 class="titulo-seccion">Galería</h2>
             <p id="resultadoImagenes"> <!--input: "se han encontrado X imagenes"--></p>
-            <div id="containerGaleria">
-                <!--Aquí van las tarjetitas de imagenes
-                <article>  
-                    <div> <img> </div> 
+            <div id="containerGaleria" class="containerGaleria">
+                <!-- Aquí van las tarjetitas de imagenes -->
+                <article class="articleImg">  
+                    <div> <img src="assets/img/animales.jpg"> </div> 
                     <p>DESCRIPCION</p> 
                     <p>AUTOR...</p> 
-                    <button>FAVORITOS</button> 
+                    <button class="btn favBtn">FAVORITOS</button> 
                 </article>
 
-                <article>  
-                    <div> <img> </div> 
+                <article class="articleImg">  
+                    <div> <img src="assets/img/animales.jpg"> </div> 
                     <p>DESCRIPCION</p> 
                     <p>AUTOR...</p> 
-                    <button>FAVORITOS</button> 
+                    <button class="btn favBtn">FAVORITOS</button> 
                 </article>
 
-                <article>  
-                    <div> <img> </div> 
+                <article class="articleImg">  
+                    <div> <img src="assets/img/animales.jpg"> </div> 
                     <p>DESCRIPCION</p> 
                     <p>AUTOR...</p> 
-                    <button>FAVORITOS</button> 
-                </article> -->
+                    <button class="btn favBtn">FAVORITOS</button> 
+                </article>
+                 <!-- Aquí acaban las tarjetitas de imagenes -->
             </div>
         </section>
         <!----------------------- PAGINACIÓN ------------------------->
@@ -88,12 +92,14 @@
             -->
             </div>
         </nav>
-        <a href="#cajaCategorias">Volver al inicio</a>
+        <a href="#cajaCategorias" class="volver">Volver al principio</a>
     </main>
 
 
-    <footer>
-        <p> &copy; 2025 Hanna y Sonia. Todos los derechos reservados. API de <a href="https://www.pexels.com/api/"
+    <footer class="fullContainer flexContainer">
+        <p> &copy; 2025 Hanna y Sonia</p>
+        <p> Todos los derechos reservados</p>
+        <p> API de <a href="https://www.pexels.com/api/"
                 target="_blank">Pexels</a></p>
     </footer>
     <script src="js/main.js"></script>
