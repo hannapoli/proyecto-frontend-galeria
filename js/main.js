@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const pAutor = document.createElement('P');
                 const pDescripcion = document.createElement('P');
                 const botonFavoritos = document.createElement('BUTTON');
-                imagen.src = foto.src.medium; //revisar lo de medium
+                imagen.src = foto.src.medium;
                 imagen.alt = foto.alt;
                 divGaleria.classList.add('sizeImagen');
                 pAutor.textContent = `Autor: ${foto.photographer} `;
@@ -197,7 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     /*
    Corazón relleno 
    &#9829;   ♥
@@ -205,33 +204,44 @@ document.addEventListener('DOMContentLoaded', () => {
    &#9825;   ♡
    */
 
+    // funcion getLocalStorage para VER = OBTENER lo que hay en favoritos:
+    // localStorage.getItem devuelve string JSON o null si no hay nada 
+    // .parse se convierte en array de objs
+    // si es null creamos un array vacio
+    const getLocalStorage = () =>
+        JSON.parse(localStorage.getItem("favoritos")) || [];
+
+    // funcion setLocalStorage para GUARDAR los favoritos en Local Storage
+    const setLocalStorage = (favoritos) =>  // el parametro puede tener otro normbre, representa cualquier dato que le pases a la funcion 
+        localStorage.setItem("favoritos", JSON.stringify(favoritos));
+
+
     // 5- Funcion añadirFavoritos
-    // cuando pulsamos añadir a favoritos -> se guarda en localStorage (con nombre o id de imagen)
-    // en localstorage tenemos un array de objetos
-    // una funcion getLocalStorage
-    // una funcion setLocalStorage
-
+    // cuando pulsamos añadir a favoritos -> se guarda en localStorage un array de objetos (con nombre o id de imagen)
     const añadirFavoritos = (id) => {
-        console.log(id)
-        // let favoritos = JSON.parse(localStorage.getItem("favoritos")) || []; 
-        // 1º Ver si hay algo en favoritos: localStorage.getItem devuelve string JSON o null si no hay nada 
-        // con .parse se convierte en array de objs
-        // si es null creamos un array vacio
-        // if () {}
-        // localStorage.setItem("favoritos", JSON.stringify(favoritos));
-        //actualiza el array  y lo guarda en localStorage
+        const favoritos = getLocalStorage()
+        const existeFavorito = favoritos.find(foto => foto.id === id); //ver si el id de la foto ya existe en favoritos
+        if (existeFavorito) {
+            return; // si existe se para la funcion
+            console.log('La imagen ya está en favoritos');
+        } else { // si no existe lo añade
+            const nuevoFavorito = {id: id}; // poner propiedades que se van a guardar en localstorage
+            //actualiza el array y lo guarda en localStorage
+            favoritos.push(nuevoFavorito);
+            setLocalStorage(favoritos);
+            console.log('Imagen añadida a favoritos');
+        }
     };
-
 
     // 6- Funcion pintarFavoritos() dudas: reutilzar pintarImagenes() ??
 
-
-    //7- Funcion eliminarFavoritos()
+    /*7- Funcion eliminarFavoritos()
     const eliminarFavoritos = (id) => {
         console.log(id)
         //Mirar local storage, buscar la imagen y eliminarla
         //Volver a pintar
     };
+    */
 
     // 8- Funcion cambiarPagina()
 
