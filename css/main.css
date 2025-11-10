@@ -141,7 +141,7 @@ select {
 
 .cajaCategorias,
 .categoria,
-.tresCategorias {
+.tresCategorias, .contenedorPaginacion {
     justify-content: center;
     align-items: center;
 }
@@ -202,12 +202,19 @@ select {
 }*/
 
 .favBtn,
-.elimBtn {
+.elimBtn, .btnPaginacion {
     padding-inline: 0.8em;
     padding-block: 0.6em;
     background-color: #457125;
     color: white;
     font-size: 1rem;
+}
+
+.btnPaginacion {
+    margin-inline: 0.3em;
+    margin-block: 1em;
+    padding: 1em;
+
 }
 
 .articleImg * {
@@ -234,7 +241,7 @@ footer {
 
 .pError {
     color: #D83933;
-    font-size: 0.8rem;
+    font-size: 1rem;
     margin-top: 0.5em;
     margin-left: 3em;
 }

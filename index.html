@@ -19,9 +19,9 @@
         <!--DESPLEGABLE SELECCIONAR ORIENTACIÓN----->
         <select id="orientacion" class="orientacion" name="orientacion">
             <option value="opciones" disabled selected>Orientación</option>
-            <option value="todas">Todas</option>
-            <option value="horizontales">Horizontales</option>
-            <option value="verticales">Verticales</option>
+            <option value="todo" id="todo">Todo</option>
+            <option value="horizontal" id="horizontal">Horizontal</option>
+            <option value="vertical" id="vertical">Vertical</option>
         </select>
 
         <nav class="menuNavegacion">
@@ -40,15 +40,15 @@
             <div class="tresCategorias flexContainer">
                 <article class="categoria flexContainer">
                     <h3>Animales</h3>
-                    <div class="imagenCategoria"><img src="assets/img/animales.jpg" alt="tigres en la selva"></div>
+                    <div class="imagenCategoria"><img src="assets/img/animales.jpg" alt="tigres en la selva" class="imgCategoria" id="animals"></div>
                 </article>
                 <article class="categoria flexContainer">
                     <h3>Comida</h3>
-                    <div class="imagenCategoria"><img src="assets/img/comida.jpg" alt="bol de frutas"></div>
+                    <div class="imagenCategoria"><img src="assets/img/comida.jpg" alt="bol de frutas" class="imgCategoria" id="food"></div>
                 </article>
                 <article class="categoria flexContainer">
                     <h3>Paises</h3>
-                    <div class="imagenCategoria"><img src="assets/img/paises.jpg" alt="torre Eiffel"></div>
+                    <div class="imagenCategoria"><img src="assets/img/paises.jpg" alt="torre Eiffel" class="imgCategoria" id="Europe"></div>
                 </article>
             </div>
         </section>
@@ -61,37 +61,22 @@
             <p id="resultadoImagenes"> <!--input: "se han encontrado X imagenes"--></p>
             <div id="containerGaleria" class="containerGaleria">
                 <!-- Aquí van las tarjetitas de imagenes -->
-                <article class="articleImg">  
+                <!-- <article class="articleImg">  
                     <div> <img src="assets/img/animales.jpg"> </div> 
                     <p>DESCRIPCION</p> 
                     <p>AUTOR...</p> 
                     <button class="btn favBtn">FAVORITOS</button> 
-                </article>
-
-                <article class="articleImg">  
-                    <div> <img src="assets/img/animales.jpg"> </div> 
-                    <p>DESCRIPCION</p> 
-                    <p>AUTOR...</p> 
-                    <button class="btn favBtn">FAVORITOS</button> 
-                </article>
-
-                <article class="articleImg">  
-                    <div> <img src="assets/img/animales.jpg"> </div> 
-                    <p>DESCRIPCION</p> 
-                    <p>AUTOR...</p> 
-                    <button class="btn favBtn">FAVORITOS</button> 
-                </article>
+                </article> -->
                  <!-- Aquí acaban las tarjetitas de imagenes -->
             </div>
         </section>
         <!----------------------- PAGINACIÓN ------------------------->
         <nav id="paginacion">
-            <div id="paginacion-buttons">
-                <!--Meter los números de las páginas de forma dinámica: son tantos botones como págs queremos que se muestren.
-                <button class ="btn btnPaginacion"> < </button>
-                <button class ="btn btnPaginacion"> 2 </button>
-                <button class ="btn btnPaginacion"> > </button>
-            -->
+            <div class="contenedorPaginacion flexContainer" id="paginacion-buttons">
+                <!-- Meter los números de las páginas de forma dinámica: son tantos botones como págs queremos que se muestren. -->
+                <button class ="btn btnPaginacion" id="paginaAnterior"> < </button>
+                <button class ="btn btnPaginacion" id="paginaActual" value="1"> 1 </button>
+                <button class ="btn btnPaginacion" id="paginaSiguiente"> > </button>
             </div>
         </nav>
         <a href="#cajaCategorias" class="volver">Volver al principio</a>
