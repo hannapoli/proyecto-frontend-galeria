@@ -12,7 +12,7 @@
     <header class="headerPrincipal fullContainer flexContainer">
         <p class="tituloWeb">Galería</p>
         <!--BUSCADOR DE IMÁGENES-->
-        <form id="BuscadorFotos">
+        <form id="buscadorFotos">
             <input type="text" id="buscador" class="buscador" placeholder="Buscar imágenes" autofocus required>
             <button type="submit" id="botonBuscar" class="btn botonBuscar">Buscar</button>
         </form>
@@ -31,7 +31,8 @@
         </nav>
     </header>
 
-    <main class="mainContainer">
+    <main class="mainContainer" id="mainContainer">
+        <p id="pError" class="pError"></p>
         <h1>Crea tu galería de imágenes</h1>
         <!--------------------------CATEGORÍAS----------------------------->
         <section id="cajaCategorias" class="flexContainer cajaCategorias">
@@ -56,6 +57,7 @@
 
         <section id="galeria">
             <h2 class="titulo-seccion">Galería</h2>
+            <p class="errorDOM" id="errorDOM"></p>
             <p id="resultadoImagenes"> <!--input: "se han encontrado X imagenes"--></p>
             <div id="containerGaleria" class="containerGaleria">
                 <!-- Aquí van las tarjetitas de imagenes -->

@@ -3,12 +3,16 @@ document.addEventListener('DOMContentLoaded', () => {
     //VARIABLES
     const inputBuscador = document.querySelector('#buscador');
     //console.log(inputBuscador);
-    const formulario = document.querySelector('#BuscadorFotos');
+    const buscadorFotos = document.querySelector('#buscadorFotos');
     //console.log(formulario);
-    const botonBuscar = document.querySelector('botonBuscar');//botón submit
+    const botonBuscar = document.querySelector('#botonBuscar');//botón submit
     //selector y sus opciones
     //los 3 articles de categorias de imagenes: hay que darles un id en html!!
+    const mainContainer = document.querySelector('mainContainer'); //para añadir p de error cuando la palabra no es válida
     const containerGaleria = document.querySelector('#containerGaleria');
+    const pError =document.querySelector('#pError');
+    const errorDOM =document.querySelector('#errorDOM');
+    
     // div paginacion
     //botones paginacion
     // boton añadir favoritos 
@@ -53,7 +57,7 @@ const arrayPrueba = [
     //EVENTOS
     //Al pulsar el boton buscar que muestre las imagenes - evento de formulario. pintarImagenes()
 
-    formulario.addEventListener("submit", (ev) => {
+    buscadorFotos.addEventListener("submit", (ev) => {
         ev.preventDefault();
         const palabra = inputBuscador.value.trim().toLowerCase();
         if (validarInput(palabra)) {
@@ -77,24 +81,25 @@ const arrayPrueba = [
         const regexp = /^[a-záéíóúÁÉÍÓÚüÜñÑ\s]+$/gi;
 
         if (!regexp.test(texto)) {
-            alert("El texto no es válido. Solo se permiten letras y espacios.");
+            inputBuscador.classList.add('errorForm');
+            pError.textContent = `El texto no es válido. Solo se permiten letras y espacios.`
         } else {
-            return true; // válido
+            inputBuscador.classList.remove('errorForm');
+            pError.innerHTML = '';
+            return true; 
         }
     }
-    const escribirError = (error) => {
-        galeria.innerHTML = ''; // duda: el mensaje de error se va a escribir en "galeria o containerGaleria??"
-        const errorMsg = document.createElement('P');
-        errorMsg.textContent = error.message;
+    const escribirError = (error) => { 
+        errorDOM.textContent = error;
         //crear esta clase y editarla en CSS (grande)
-        errorMsg.classList.add('errorDOM');
-        galeria.append(errorMsg);
+        errorDOM.classList.add('errorDOM');
+        
     }
 
     // 2- Funcion llamar a la API
     //Variables temporales = para probar si funciona !!!!
     const url = `search`;
-    let busqueda = `gato`;
+    let busqueda = `mesa`;
 
     const llamarApi = async (url, busqueda) => {
         try {
@@ -104,19 +109,19 @@ const arrayPrueba = [
                     Authorization: autorizacion
                 }
             });
-            if (!respuesta.ok) throw Error(`Error ${respuesta.status}! No se ha encontrado la imagen solicitada.`);
+            if (!respuesta.ok) throw `Error ${respuesta.status}!🕵️‍♀️No se ha encontrado la imagen solicitada.`;
             const data = await respuesta.json();
             console.log(data);
             return data;
             //pensar cómo y dónde gestionar este error (mensaje en el DOM)?
         } catch (error) {
             escribirError(error);
-            console.error(error);
+            //console.error(error);
         }
     }
 
     //quitar de aquí y mover al eventListener o en la función de pintar
-    // llamarApi(url, busqueda);
+    llamarApi(url, busqueda);
 
     //Pintamos las fotos debajo de categorías
 
@@ -126,33 +131,38 @@ const arrayPrueba = [
             containerGaleria.innerHTML = ''; // para limpiar imagenes previas - toda la galeria o el container de dentro???
             const datos = await llamarApi(url, busqueda); // creo que para poder poner 12 fotos tienes que pasar 1º el parametro perPage = 12, en la funcion llamarApi y aquí seria (url, busqueda, 12)
             const fotosTotales = datos.photos;
-            console.log(fotosTotales);
+            //console.log(fotosTotales);
 
             if (!fotosTotales || fotosTotales.length === 0) {  // si no existe, es null o indefined----o el array está vacío
-                escribirError({ message: 'No se encontraron imágenes' });
-                return; // se para la función
+                throw `No hay imágenes del tema ${busqueda}`;
+                // escribirError('error');
+                // return; // se para la función
             }
             fotosTotales.forEach((foto => {
-                const article = document.createElement('ARTICLE');
-                const div = document.createElement('DIV');
-                const imagen = document.createElement('IMG')
+                const articleGaleria = document.createElement('ARTICLE');
+                const divGaleria = document.createElement('DIV');
+                const imagen = document.createElement('IMG');
                 const pAutor = document.createElement('P');
                 const pDescripcion = document.createElement('P');
                 const botonFavoritos = document.createElement('BUTTON');
                 imagen.src = foto.src.medium; //revisar lo de medium
                 imagen.alt = foto.alt;
-                //imagen.classList.add(); (estilo CSS: flexbox etc)
+                divGaleria.classList.add('sizeImagen');
                 pAutor.textContent = `Autor: ${foto.photographer} `;
                 pDescripcion.textContent = foto.alt;
-                botonFavoritos.textContent = "♡";
+                botonFavoritos.textContent = "♡ Favoritos";
                 botonFavoritos.classList.add('btn');
-                div.append(imagen);
-                article.append(div, pAutor, pDescripcion, botonFavoritos);
-                fragment.append(article);
+                botonFavoritos.classList.add('favBtn');
+                articleGaleria.classList.add('articleImg');
+
+                divGaleria.append(imagen);
+                articleGaleria.append(divGaleria, pAutor, pDescripcion, botonFavoritos);
+                fragment.append(articleGaleria);
             }));
             containerGaleria.append(fragment); // o toda la galeria???
         } catch (error) {
             escribirError();
+            console.error(error)
         }
     }
 

@@ -16,7 +16,8 @@ img {
 
 h1,
 h2,
-h3, .volver {
+h3,
+.volver {
     text-align: center;
 }
 
@@ -97,7 +98,9 @@ select {
     align-items: center;
 }
 
-.tituloWeb, .favoritos, .headerVolver {
+.tituloWeb,
+.favoritos,
+.headerVolver {
     font-size: 1.2rem;
 }
 
@@ -192,10 +195,19 @@ select {
     margin: 1em;
 }
 
-.favBtn, .elimBtn {
-    padding: 0.8em;
+/*.sizeImagen {
+    height: 10em;
+    width: auto;
+    object-fit: cover;
+}*/
+
+.favBtn,
+.elimBtn {
+    padding-inline: 0.8em;
+    padding-block: 0.6em;
     background-color: #457125;
     color: white;
+    font-size: 1rem;
 }
 
 .articleImg * {
@@ -214,14 +226,19 @@ footer {
 }
 
 .errorDOM {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 600;
+    text-align: center;
+    margin: 1em;
 }
 
-/* Añadir esta clase al error de validación 
-const buscador ('#buscador')
-buscador.classList.add('.errorForm')
-*/
+.pError {
+    color: #D83933;
+    font-size: 0.8rem;
+    margin-top: 0.5em;
+    margin-left: 3em;
+}
+
 .errorForm {
     background-color: #F5CCBA;
     border-color: #D83933;
@@ -262,6 +279,10 @@ buscador.classList.add('.errorForm')
     .containerGaleria {
         grid-template-columns: repeat(2, 45%);
     }
+
+    .pError {
+        margin-left: 5em;
+    }
 }
 
 /* 768px */
@@ -279,6 +300,9 @@ buscador.classList.add('.errorForm')
     .containerGaleria {
         grid-template-columns: repeat(3, 30%);
     }
+    .pError {
+        margin-left: 12em;
+    }
 
 }
 
@@ -291,6 +315,9 @@ buscador.classList.add('.errorForm')
 @media screen and (min-width:1200px) {
     .mainContainer {
         max-width: 1300px;
+    }
+    .pError {
+        margin-left: 20em;
     }
 }
 
