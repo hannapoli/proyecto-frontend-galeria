@@ -10,13 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorDOM = document.querySelector('#errorDOM');
     const containerGaleria = document.querySelector('#containerGaleria');
     const fragment = document.createDocumentFragment();
-    const mainContainer = document.querySelector('#mainContainer');
     let busqueda = '';
     let paginaActual = document.querySelector('#paginaActual');
-    //let numeroPagina = paginaActual.value;
+    let numeroPagina = paginaActual.value;
     const containerFavoritos = document.querySelector('#favoritos');
-    // const imgCategoria = document.querySelectorAll('.imgCategoria');
-
+    const tresCategorias = document.querySelector('#tresCategorias');
     // div paginacion
     //botones paginacion
     // boton añadir favoritos 
@@ -94,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     //FUNCIONES
     /**
      * Validar el texto introducido en el buscador que solo puede contener palabras y espacios.
@@ -124,7 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let urlCompleta;
         if (!valorOrientacion) {
             urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&page=${numeroPagina}&per_page=12&locale=es-ES`;
-
         } else {
             if (valorOrientacion === 'horizontal') {
                 urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=landscape&page=${numeroPagina}&per_page=12&locale=es-ES`;
@@ -132,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=portrait&page${numeroPagina}&per_page=12&locale=es-ES`;
             }
         }
-
         if (id) {
             urlCompleta = `${urlBase}photos/${id}`;
         }
@@ -143,11 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Función para llamar a la API de Pexels y obtener las imágenes con el tema solicitado.
      * @function llamarApi
-     * @param {string} urlCompleta - el enlace completa de la llamada.
+     * @param {string} urlCompleta - el enlace completa de la llamada.//corregir
      * @returns {Object} data - objeto con las imágenes y otra información.
      */
     const llamarApi = async (busqueda, numeroPagina, id = null, valorOrientacion = null) => {
-        // console.log({busqueda})
         try {
             const urlCompleta = crearUrl(busqueda, numeroPagina, id, valorOrientacion);
             const respuesta = await fetch(`${urlCompleta}`, {
@@ -164,15 +158,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const pintarTodasCategorias = () => {
+        const arrayCategorias = ['Animales', 'Comida', 'Playa'];
+        arrayCategorias.forEach((categoria) => {
+            pintarCategorias(categoria, numeroPagina = null, id = null, 'horizontal');
+        })
+    }
+
+    //Función pintarCaregorias()
+    const pintarCategorias = async (categoria, numeroPagina = null, id = null, valorOrientacion) => {
+        try {
+            const datos = await llamarApi(categoria, numeroPagina, id, valorOrientacion);
+            const fotosTotales = datos.photos[8];
+            if (!fotosTotales || fotosTotales.length === 0) {  // si no existe, es null o indefined----o el array está vacío
+                throw `No hay imágenes del tema ${busqueda}`;
+            }
+            const articleCategoria = document.createElement('ARTICLE');
+            const tituloCategoria = document.createElement('H3');
+            const divCategoria = document.createElement('DIV');
+            const imgCategoria = document.createElement('IMG');
+
+            articleCategoria.classList.add('categoria', 'flexContainer');
+            tituloCategoria.textContent = categoria;
+            divCategoria.classList.add('imagenCategoria');
+            imgCategoria.src = fotosTotales.src.medium;
+            imgCategoria.alt = fotosTotales.alt;
+            imgCategoria.classList.add('imgCategoria');
+            imgCategoria.id = categoria;
+
+            divCategoria.append(imgCategoria);
+            articleCategoria.append(tituloCategoria, divCategoria);
+            tresCategorias.append(articleCategoria);
+        } catch (error) {
+            escribirError();
+            console.error(error)
+        }
+    }
+
     //Funcion Pintar imagenes:
     const pintarImagenes = async (busqueda, numeroPagina, id = null, valorOrientacion = null) => {
         try {
             containerGaleria.innerHTML = '';
             const datos = await llamarApi(busqueda, numeroPagina, id, valorOrientacion);
-
             const fotosTotales = datos.photos;
-            //console.log(fotosTotales);
-
             if (!fotosTotales || fotosTotales.length === 0) {  // si no existe, es null o indefined----o el array está vacío
                 throw `No hay imágenes del tema ${busqueda}`;
             }
@@ -191,15 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 pDescripcion.textContent = foto.alt;
                 botonFavoritos.id = foto.id;
                 botonFavoritos.textContent = "♡ Favoritos";
-                botonFavoritos.classList.add('btn');
-                botonFavoritos.classList.add('favBtn');
+                botonFavoritos.classList.add('btn', 'favBtn');
                 articleGaleria.classList.add('articleImg');
 
                 divGaleria.append(imagen);
                 articleGaleria.append(divGaleria, pAutor, pDescripcion, botonFavoritos);
                 fragment.append(articleGaleria);
             }));
-            containerGaleria.append(fragment); // o toda la galeria???
+            containerGaleria.append(fragment);
         } catch (error) {
             escribirError();
             console.error(error)
@@ -241,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const pintarFavoritos = () => {
         const favoritosActualizados = getLocalStorage()
-        console.log(favoritosActualizados)
         favoritosActualizados.forEach((objetoFotos) => {
             const articleFav = document.createElement('ARTICLE');
             const divFav = document.createElement('DIV');
@@ -271,12 +297,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const init = () => {
-
-        console.log(location.pathname)
         if (location.pathname.includes("favoritos")) {
             pintarFavoritos();
         } else if (location.pathname.includes("index")) {
-            console.log('Pintar categorías')
+            pintarTodasCategorias();
         }
     }
     init();
