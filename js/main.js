@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContainer = document.querySelector('#mainContainer');
     let busqueda = '';
     let paginaActual = document.querySelector('#paginaActual');
-    let numeroPagina = paginaActual.value;
+    //let numeroPagina = paginaActual.value;
+    const containerFavoritos = document.querySelector('#favoritos');
     // const imgCategoria = document.querySelectorAll('.imgCategoria');
 
     // div paginacion
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * El evento que se activa al pulsar el botón 'buscar' y muestra las imágenes relacionadas con la búsqueda.
      * @event submit
      */
-    buscadorFotos.addEventListener("submit", (ev) => {
+    buscadorFotos?.addEventListener("submit", (ev) => {
         ev.preventDefault();
         busqueda = inputBuscador.value.trim().toLowerCase();
         if (validarInput(busqueda)) {
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * El evento que se activa al seleccionar la orientación: horizontal, vertical o todo.
      * @event change
      */
-    orientacion.addEventListener("change", (ev) => {
+    orientacion?.addEventListener("change", (ev) => {
         console.log(ev.target.value);
         const valorOrientacion = ev.target.value;
         pintarImagenes(busqueda, valorOrientacion);
@@ -50,19 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
      * El evento que se activa con un click del ratón según el elemento pulsado.
      * @event click
      */
-    mainContainer.addEventListener("click", (ev) => {
+    document.addEventListener("click", (ev) => {
         //Al pulsar cada una de las 3 categorías se cargan las fotos de la categoría seleccionada.
         if (ev.target.matches('.imgCategoria')) {
-            const categoria = ev.target.id;
-            pintarImagenes(categoria, 'horizontal');
+            busqueda = ev.target.id;
+            pintarImagenes(busqueda, 'horizontal');
         };
-        //Añadir a favoritos  añadirFavoritos()
+        //Añadir a favoritos  addFavoritos()
         // console.log(ev.target.matches('.favBtn'));
         if (ev.target.matches('.favBtn')) {
             const idFavoritos = ev.target.id;
-            añadirFavoritos(idFavoritos);
-            //!!!! al pintarImagen(hay que también recoger el id de caga imagen 
-            // para usarlo en favoritos e eliminarFavoritos)
+            ev.target.textContent = '♥ Favoritos';
+            addFavoritos(idFavoritos);
         }
 
         //Eliminar de favoritos
@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-
     //FUNCIONES
     /**
      * Validar el texto introducido en el buscador que solo puede contener palabras y espacios.
@@ -121,15 +120,23 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDOM.classList.add('errorDOM');
     }
 
-    const crearUrl = (busqueda, valorOrientacion, numeroPagina) => {
+    const crearUrl = (busqueda, numeroPagina, id = null, valorOrientacion = null) => {
         let urlCompleta;
-        if (valorOrientacion === 'horizontal') {
-            urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=landscape&page=${numeroPagina}&per_page=12&locale=es-ES`;
-        } else if (valorOrientacion === 'vertical') {
-            urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=portrait&page${numeroPagina}&per_page=12&locale=es-ES`;
-        } else {
+        if (!valorOrientacion) {
             urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&page=${numeroPagina}&per_page=12&locale=es-ES`;
+
+        } else {
+            if (valorOrientacion === 'horizontal') {
+                urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=landscape&page=${numeroPagina}&per_page=12&locale=es-ES`;
+            } else if (valorOrientacion === 'vertical') {
+                urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=portrait&page${numeroPagina}&per_page=12&locale=es-ES`;
+            }
         }
+
+        if (id) {
+            urlCompleta = `${urlBase}photos/${id}`;
+        }
+
         return urlCompleta;
     }
 
@@ -139,8 +146,10 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} urlCompleta - el enlace completa de la llamada.
      * @returns {Object} data - objeto con las imágenes y otra información.
      */
-    const llamarApi = async (urlCompleta) => {
+    const llamarApi = async (busqueda, numeroPagina, id = null, valorOrientacion = null) => {
+        // console.log({busqueda})
         try {
+            const urlCompleta = crearUrl(busqueda, numeroPagina, id, valorOrientacion);
             const respuesta = await fetch(`${urlCompleta}`, {
                 method: 'GET',
                 headers: {
@@ -149,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (!respuesta.ok) throw `Error ${respuesta.status}!🕵️‍♀️No se ha encontrado la imagen solicitada.`;
             const data = await respuesta.json();
-            console.log(data);
             return data;
         } catch (error) {
             escribirError(error);
@@ -157,11 +165,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //Funcion Pintar imagenes:
-    const pintarImagenes = async (busqueda, valorOrientacion, numeroPagina) => {
+    const pintarImagenes = async (busqueda, numeroPagina, id = null, valorOrientacion = null) => {
         try {
-            containerGaleria.innerHTML = ''; // para limpiar imagenes previas - toda la galeria o el container de dentro???
-            const urlCompleta = crearUrl(busqueda, valorOrientacion, numeroPagina);
-            const datos = await llamarApi(urlCompleta);
+            containerGaleria.innerHTML = '';
+            const datos = await llamarApi(busqueda, numeroPagina, id, valorOrientacion);
 
             const fotosTotales = datos.photos;
             //console.log(fotosTotales);
@@ -178,9 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const botonFavoritos = document.createElement('BUTTON');
                 imagen.src = foto.src.medium;
                 imagen.alt = foto.alt;
-                divGaleria.classList.add('sizeImagen');
+                imagen.id = foto.id;
+                //divGaleria.classList.add('sizeImagen');
                 pAutor.textContent = `Autor: ${foto.photographer} `;
                 pDescripcion.textContent = foto.alt;
+                botonFavoritos.id = foto.id;
                 botonFavoritos.textContent = "♡ Favoritos";
                 botonFavoritos.classList.add('btn');
                 botonFavoritos.classList.add('favBtn');
@@ -197,13 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /*
-   Corazón relleno 
-   &#9829;   ♥
-   Corazón vacío
-   &#9825;   ♡
-   */
-
     // funcion getLocalStorage para VER = OBTENER lo que hay en favoritos:
     // localStorage.getItem devuelve string JSON o null si no hay nada 
     // .parse se convierte en array de objs
@@ -212,30 +214,76 @@ document.addEventListener('DOMContentLoaded', () => {
         JSON.parse(localStorage.getItem("favoritos")) || [];
 
     // funcion setLocalStorage para GUARDAR los favoritos en Local Storage
-    const setLocalStorage = (favoritos) =>  // el parametro puede tener otro normbre, representa cualquier dato que le pases a la funcion 
+    const setLocalStorage = (favoritos) =>
         localStorage.setItem("favoritos", JSON.stringify(favoritos));
 
-
-    // 5- Funcion añadirFavoritos
-    // cuando pulsamos añadir a favoritos -> se guarda en localStorage un array de objetos (con nombre o id de imagen)
-    const añadirFavoritos = (id) => {
+    // 5- Funcion addFavoritos
+    const addFavoritos = async (id) => {
+        const data = await llamarApi(null, null, id, null)
+        console.log(data)
         const favoritos = getLocalStorage()
-        const existeFavorito = favoritos.find(foto => foto.id === id); //ver si el id de la foto ya existe en favoritos
-        if (existeFavorito) {
-            return; // si existe se para la funcion
-            console.log('La imagen ya está en favoritos');
-        } else { // si no existe lo añade
-            const nuevoFavorito = {id: id}; // poner propiedades que se van a guardar en localstorage
-            //actualiza el array y lo guarda en localStorage
-            favoritos.push(nuevoFavorito);
-            setLocalStorage(favoritos);
-            console.log('Imagen añadida a favoritos');
+        console.log(favoritos)
+        const existeFavorito = favoritos.find(foto => foto.id === id);
+        if (!existeFavorito) {
+            const nuevoFavorito =
+            {
+                id: data.id,
+                srcM: data.src.medium,
+                srcG: data.src.large,
+                alt: data.alt,
+                autor: data.photographer
+            };
+            setLocalStorage([...favoritos, nuevoFavorito]);
         }
     };
 
-    // 6- Funcion pintarFavoritos() dudas: reutilzar pintarImagenes() ??
+    // 6- Funcion pintarFavoritos()
 
-    /*7- Funcion eliminarFavoritos()
+    const pintarFavoritos = () => {
+        const favoritosActualizados = getLocalStorage()
+        console.log(favoritosActualizados)
+        favoritosActualizados.forEach((objetoFotos) => {
+            const articleFav = document.createElement('ARTICLE');
+            const divFav = document.createElement('DIV');
+            const imgFav = document.createElement('IMG');
+            const pDescripcionFav = document.createElement('P');
+            const pautorFav = document.createElement('P');
+            const botonEliminar = document.createElement('BUTTON');
+
+            imgFav.alt = objetoFotos.alt;
+            imgFav.src = objetoFotos.srcM;
+
+            imgFav.id = objetoFotos.id;
+            //divGaleria.classList.add('sizeImagen');
+            pautorFav.textContent = `Autor: ${objetoFotos.autor} `;
+            pDescripcionFav.textContent = objetoFotos.alt;
+            botonEliminar.id = objetoFotos.id;
+            botonEliminar.textContent = "Eliminar";
+            botonEliminar.classList.add('btn');
+            botonEliminar.classList.add('elimBtn');
+            articleFav.classList.add('articleImg');
+
+            divFav.append(imgFav);
+            articleFav.append(divFav, pDescripcionFav, pautorFav, botonEliminar);
+            fragment.append(articleFav);
+        })
+        containerFavoritos.append(fragment);
+    }
+
+    const init = () => {
+
+        console.log(location.pathname)
+        if (location.pathname.includes("favoritos")) {
+            pintarFavoritos();
+        } else if (location.pathname.includes("index")) {
+            console.log('Pintar categorías')
+        }
+    }
+    init();
+
+    /*
+    7- Funcion eliminarFavoritos()
+
     const eliminarFavoritos = (id) => {
         console.log(id)
         //Mirar local storage, buscar la imagen y eliminarla
