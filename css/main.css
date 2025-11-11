@@ -29,16 +29,9 @@ h1 {
 }
 
 h2 {
-    font-size: 1.4rem;
+    font-size: 1.3em;
     margin-block: 0.2em;
     padding: 0.4em;
-}
-
-h3 {
-    font-size: 1.2rem;
-    margin-block: 0.3em;
-    color: white;
-    padding: 0.2em;
 }
 
 p {
@@ -69,7 +62,7 @@ footer a {
 
 header *,
 footer * {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 500;
 }
 
@@ -92,8 +85,8 @@ select {
 
 .fullContainer {
     width: 100%;
-    background-color: #457125;
-    height: 4.5em;
+    background-color: rgb(81, 81, 81);
+    height: 4em;
     justify-content: space-evenly;
     align-items: center;
 }
@@ -116,7 +109,6 @@ select {
     border: none;
     border-radius: 4px;
     background-color: white;
-    color: #457125;
 }
 
 .botonBuscar {
@@ -130,7 +122,7 @@ select {
 }
 
 .orientacion {
-    padding-inline: 0.3em;
+    padding-inline: 0.4em;
     padding-block: 0.1em;
 }
 
@@ -141,23 +133,38 @@ select {
 
 .cajaCategorias,
 .categoria,
-.tresCategorias, .contenedorPaginacion {
+.tresCategorias,
+.contenedorPaginacion {
     justify-content: center;
     align-items: center;
 }
 
 .tresCategorias {
+    justify-content: center;
     flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tresCategorias h3 {
+    padding: 0.4em;
+    color: #e67708;
+    text-transform: uppercase;
 }
 
 .categoria {
-    width: 40%;
-    border: 3px solid #457125;
-    background-color: #457125;
-    border-radius: 30px;
-    padding-inline: 0.5em;
-    padding-bottom: 0.8em;
-    margin: 0.8em;
+    margin: 10px;
+    width: 80%;
+    height: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.4s;
+}
+
+.categoria:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .btn,
@@ -177,11 +184,18 @@ select {
 }
 
 .imagenCategoria {
-    width: 95%;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 0 0 14px 14px;
 }
 
-.imagenCategoria>img {
-    border-radius: 20px;
+.imagenCategoria img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* llena el contenedor sin deformarse */
+    transition: transform 0.4s ease;
 }
 
 .containerGaleria {
@@ -192,20 +206,31 @@ select {
 }
 
 .articleImg {
+    padding: 0.8em;
     margin: 1em;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    transition: transform 0.3s ease;
+    /*para suavizar el efecto scale al hacer hover*/
 }
 
-/*.sizeImagen {
-    height: 10em;
-    width: auto;
-    object-fit: cover;
-}*/
+.articleImg img {
+    width: 100%;
+    height: 30vh;
+    object-fit: contain;
+}
+
+.articleImg:hover {
+    transform: scale(1.08);
+}
 
 .favBtn,
-.elimBtn, .btnPaginacion {
+.elimBtn,
+.btnPaginacion {
     padding-inline: 0.8em;
     padding-block: 0.6em;
-    background-color: #457125;
+    background-color: #ff9d3a;
     color: white;
     font-size: 1rem;
 }
@@ -214,7 +239,6 @@ select {
     margin-inline: 0.3em;
     margin-block: 1em;
     padding: 1em;
-
 }
 
 .articleImg * {
@@ -307,6 +331,7 @@ footer {
     .containerGaleria {
         grid-template-columns: repeat(3, 30%);
     }
+
     .pError {
         margin-left: 12em;
     }
@@ -323,6 +348,7 @@ footer {
     .mainContainer {
         max-width: 1300px;
     }
+
     .pError {
         margin-left: 20em;
     }
