@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Hanna Polishchuk, Sonia Nseng Mikue" />
+    <meta name="description"
+        content="Sección de favoritos: consulta y gestiona las imágenes que has guardado desde la Galería." />
     <title>Favoritos</title>
     <link rel="stylesheet" href="../css/main.css">
 </head>
@@ -21,26 +24,25 @@
     <main class="mainContainer">
         <h1>Favoritos</h1>
         <section id="favoritos" class="containerGaleria">
-            <!-- Aquí van las tarjetitas de imagenes
+            <!-- Aquí van las imagenes favoritas
                 <article class="articleImg">  
                     <div> <img src="../assets/img/animales.jpg"> </div> 
-                    <p>DESCRIPCION</p> 
+                    <p>DESCRIPCIÓN</p> 
                     <p>AUTOR...</p> 
                     <button class="btn elimBtn">ELIMINAR</button> 
+                    <button class="btn ampliarBtn">AMPLIAR</button> 
                 </article>
             -->
         </section>
-
         <a href="#favoritos" class="volver">Volver al principio</a>
     </main>
     <!-- POPUP PARA AMPLIAR IMAGEN EN FAVORITOS-->
     <div id="popup" class="popup">
         <div class="popupContenido">
             <span id="cerrarPopup" class="cerrar">x</span>
-            <img id="popupImg" src="" alt="Imagen ampliada"> <!--le doy el src desde JS-->
+            <img id="popupImg" src="" alt="Imagen ampliada"> <!--se le da el src desde JS-->
         </div>
     </div>
-
     <footer class="fullContainer flexContainer">
         <p> &copy; 2025 Hanna y Sonia</p>
         <p> Todos los derechos reservados</p>

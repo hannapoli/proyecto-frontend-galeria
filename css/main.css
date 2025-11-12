@@ -303,47 +303,52 @@ footer {
 
 /* ----POPUP DE IMAGEN AMPLIADA EN FAVORITOS-----*/
 .popup {
-  display: none; /* oculto por defecto */
-  position: fixed;
-  z-index: 100; /* se muestra por encima de todo */
-  inset: 0; /*para que cubra toda la ventana*/
-  justify-content: center;
-  align-items: center;
+    display: none;
+    /* oculto por defecto */
+    position: fixed;
+    z-index: 100;
+    /* se muestra por encima de todo */
+    inset: 0;
+    /*para que cubra toda la ventana*/
+    justify-content: center;
+    align-items: center;
 }
 
 .popupContenido {
-  position: relative;
-  padding: 15px;
-  max-width: 90%;
-  max-height: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;  
+    position: relative;
+    padding: 15px;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .popupContenido img {
-  max-width: 100%;
-  max-height: 80%;
-  border-radius: 10px;
+    max-width: 100%;
+    max-height: 80%;
+    border-radius: 10px;
 }
 
 .popup-visible {
-    display: flex; /* clase que le daré en JS para que se muestre */
+    display: flex;
+    /* clase que le daré en JS para que se muestre */
 }
 
 .cerrar {
-  position: absolute;
-  top: 9px;
-  right: 10px;
-  padding: 0.3em;
-  font-size: 2em;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 50%; /*para que el boton dde cerrar sea redondo*/
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    padding: 0.3em;
+    font-size: 2em;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 50%;
+    /*para que el boton dde cerrar sea redondo*/
 }
 
 .cerrar:hover {
-  background: rgb(222, 107, 0);
+    background: rgb(222, 107, 0);
 }
 
 /* ===============================
