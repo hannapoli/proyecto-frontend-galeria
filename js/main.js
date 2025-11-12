@@ -1,4 +1,3 @@
-// ESTRUCTURA DEL PROYECTO:
 document.addEventListener('DOMContentLoaded', () => {
     //VARIABLES
     const inputBuscador = document.querySelector('#buscador');
@@ -10,16 +9,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorDOM = document.querySelector('#errorDOM');
     const containerGaleria = document.querySelector('#containerGaleria');
     const fragment = document.createDocumentFragment();
-    let busqueda = '';
-    let paginaActual = document.querySelector('#paginaActual');
-    let numeroPagina = paginaActual.value;
     const containerFavoritos = document.querySelector('#favoritos');
     const tresCategorias = document.querySelector('#tresCategorias');
-    // div paginacion
-    //botones paginacion
-    // boton añadir favoritos 
-    //boton eliminar favoritos
-    // #favoritos para añidir las imagenes favoritas
+    const paginacionButtons = document.querySelector('#paginacionButtons');
+    let busqueda;
+    let valorOrientacion = null;
+    let paginaActual = 1;
+    let totalResultados;
+    let resultadosPorPagina = 12;
+    let primeraPagBloque;
+    let ultimaPagBloque;
 
     //EVENTOS
     /**
@@ -30,7 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ev.preventDefault();
         busqueda = inputBuscador.value.trim().toLowerCase();
         if (validarInput(busqueda)) {
-            pintarImagenes(busqueda);
+            paginaActual = 1;
+            pintarImagenes();
+            inputBuscador.value = '';
         }
     });
 
@@ -39,10 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
      * @event change
      */
     orientacion?.addEventListener("change", (ev) => {
-        console.log(ev.target.value);
-        const valorOrientacion = ev.target.value;
-        pintarImagenes(busqueda, valorOrientacion);
-        // return valorOrientacion;
+        valorOrientacion = ev.target.value;
+        pintarImagenes();
     });
 
     /**
@@ -53,42 +52,46 @@ document.addEventListener('DOMContentLoaded', () => {
         //Al pulsar cada una de las 3 categorías se cargan las fotos de la categoría seleccionada.
         if (ev.target.matches('.imgCategoria')) {
             busqueda = ev.target.id;
-            pintarImagenes(busqueda, 'horizontal');
+            pintarImagenes();
         };
-        //Añadir a favoritos  addFavoritos()
-        // console.log(ev.target.matches('.favBtn'));
+        //Añadir a favoritos  agregarFavoritos()
         if (ev.target.matches('.favBtn')) {
             const idFavoritos = ev.target.id;
-            ev.target.textContent = '♥ Favoritos';
-            addFavoritos(idFavoritos);
+            if (ev.target.textContent == '♡ Favoritos') {
+                ev.target.textContent = '♥ Favoritos';
+                agregarFavoritos(idFavoritos);
+            } else {
+                ev.target.textContent = '♡ Favoritos';
+                eliminarFavoritos(idFavoritos);
+            }
         }
 
         //Eliminar de favoritos
-        // console.log(ev.target.matches('.elimBtn'));
         if (ev.target.matches('.elimBtn')) {
             const idEliminar = ev.target.id;
             eliminarFavoritos(idEliminar);
         }
 
-        //Cambiar de página (pendiente: terminar y convertir en una o dos funciones)
+        //Elegir la página y cargar las fotos de esta página
+        if (ev.target.matches('.btnPaginacion')) {
+            paginaActual = ev.target.id;
+            pintarImagenes()
+        }
 
-        // console.log(ev.target.matches('#paginaAnterior'));
+        //ir a la página anterior
         if (ev.target.matches('#paginaAnterior')) {
-            console.log(numeroPagina)
-            if (numeroPagina > 1) {
-                numeroPagina--;
-                paginaActual.textContent = numeroPagina;
-                //volver a pintar las imágenes pero ya con una página nueva como parámetro
+            if (paginaActual > 9) {
+                paginaActual = primeraPagBloque - 1;
+                pintarImagenes();
+                pintarBotones();
             }
         }
-        // console.log(ev.target.matches('#paginaSiguiente'));
+
+        //ir a la página siguiente
         if (ev.target.matches('#paginaSiguiente')) {
-            console.log(numeroPagina)
-            if (numeroPagina < 300) {
-                numeroPagina++;
-                paginaActual.textContent = numeroPagina;
-                //volver a pintar las imágenes pero ya con una página nueva como parámetro
-            }
+            paginaActual = ultimaPagBloque + 1;
+            pintarImagenes();
+            pintarBotones();
         }
     });
 
@@ -97,14 +100,15 @@ document.addEventListener('DOMContentLoaded', () => {
      * Validar el texto introducido en el buscador que solo puede contener palabras y espacios.
      * @function validarInput
      * @param {string} busqueda - la palabra que introduce el usuario para el tema de las fotos que se renderizarán.
-     * @returns {boolean} true - confirmación que la palabra ha pasado la validación.
+     * @returns {boolean} true si la palabra ha pasado la validación o false si no es así.
      */
     const validarInput = (busqueda) => {
         const regexp = /^[a-záéíóúÁÉÍÓÚüÜñÑ\s]+$/gi;
 
         if (!regexp.test(busqueda)) {
             inputBuscador.classList.add('errorForm');
-            pError.textContent = `El texto no es válido. Solo se permiten letras y espacios.`
+            pError.textContent = `El texto no es válido. Solo se permiten letras y espacios.`;
+            return false;
         } else {
             inputBuscador.classList.remove('errorForm');
             pError.innerHTML = '';
@@ -113,25 +117,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const escribirError = (error) => {
+        errorDOM.textContent = '';
         errorDOM.textContent = error;
         errorDOM.classList.add('errorDOM');
     }
 
-    const crearUrl = (busqueda, numeroPagina, id = null, valorOrientacion = null) => {
+    const crearUrl = (id = null) => {
         let urlCompleta;
         if (!valorOrientacion) {
-            urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&page=${numeroPagina}&per_page=12&locale=es-ES`;
+            urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&page=${paginaActual}&per_page=${resultadosPorPagina}&locale=es-ES`;
         } else {
-            if (valorOrientacion === 'horizontal') {
-                urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=landscape&page=${numeroPagina}&per_page=12&locale=es-ES`;
-            } else if (valorOrientacion === 'vertical') {
-                urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=portrait&page${numeroPagina}&per_page=12&locale=es-ES`;
-            }
+            urlCompleta = `${urlBase}search?query=${busqueda}&size=medium&orientation=${valorOrientacion}&page=${paginaActual}&per_page=${resultadosPorPagina}&locale=es-ES`;
         }
         if (id) {
             urlCompleta = `${urlBase}photos/${id}`;
         }
-
         return urlCompleta;
     }
 
@@ -141,10 +141,10 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} urlCompleta - el enlace completa de la llamada.//corregir
      * @returns {Object} data - objeto con las imágenes y otra información.
      */
-    const llamarApi = async (busqueda, numeroPagina, id = null, valorOrientacion = null) => {
+    const llamarApi = async (id = null) => {
         try {
-            const urlCompleta = crearUrl(busqueda, numeroPagina, id, valorOrientacion);
-            const respuesta = await fetch(`${urlCompleta}`, {
+            const urlCompleta = crearUrl(id);
+            const respuesta = await fetch(urlCompleta, {
                 method: 'GET',
                 headers: {
                     Authorization: autorizacion
@@ -159,19 +159,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const pintarTodasCategorias = () => {
-        const arrayCategorias = ['Animales', 'Comida', 'Playa'];
-        arrayCategorias.forEach((categoria) => {
-            pintarCategorias(categoria, numeroPagina = null, id = null, 'horizontal');
-        })
+        const arrayCategorias = [{
+            id: 39627,
+            categoria: 'Animales'
+        },
+        {
+            id: 16743523,
+            categoria: 'Comida'
+        },
+        {
+            id: 1430677,
+            categoria: 'Playa'
+        }]
+        tresCategorias.innerHTML = '';
+        arrayCategorias.forEach((categoria) => pintarCategorias(categoria));
     }
 
     //Función pintarCaregorias()
-    const pintarCategorias = async (categoria, numeroPagina = null, id = null, valorOrientacion) => {
+    const pintarCategorias = async ({ id, categoria }) => {
         try {
-            const datos = await llamarApi(categoria, numeroPagina, id, valorOrientacion);
-            const fotosTotales = datos.photos[8];
-            if (!fotosTotales || fotosTotales.length === 0) {  // si no existe, es null o indefined----o el array está vacío
-                throw `No hay imágenes del tema ${busqueda}`;
+            const objetoFoto = await llamarApi(id);
+            if (!objetoFoto) {
+                throw `No hay imágenes del tema ${categoria}`;
             }
             const articleCategoria = document.createElement('ARTICLE');
             const tituloCategoria = document.createElement('H3');
@@ -181,8 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
             articleCategoria.classList.add('categoria', 'flexContainer');
             tituloCategoria.textContent = categoria;
             divCategoria.classList.add('imagenCategoria');
-            imgCategoria.src = fotosTotales.src.medium;
-            imgCategoria.alt = fotosTotales.alt;
+            imgCategoria.src = objetoFoto.src.medium;
+            imgCategoria.alt = objetoFoto.alt;
             imgCategoria.classList.add('imgCategoria');
             imgCategoria.id = categoria;
 
@@ -190,20 +199,53 @@ document.addEventListener('DOMContentLoaded', () => {
             articleCategoria.append(tituloCategoria, divCategoria);
             tresCategorias.append(articleCategoria);
         } catch (error) {
-            escribirError();
-            console.error(error)
+            escribirError(error);
         }
     }
 
+    const pintarBotones = () => {
+        paginacionButtons.innerHTML = '';
+        const numPaginas = Math.ceil(totalResultados / resultadosPorPagina);
+        //Tenemos unos bloques de 10 botones.
+        //Calculamos en qué bloque está el botón pulsado:
+        const bloqueInicio = Math.floor((paginaActual - 1) / 10);
+        //Calculamos el primer botón en este bloque:
+        primeraPagBloque = bloqueInicio * 10 + 1;
+        //Calculamos el último botón en este bloque, 
+        // teniendo en cuenta si hay menos de 10 botones en el último bloque:
+        ultimaPagBloque = Math.min((primeraPagBloque + 9), numPaginas);
+
+        const botonAnterior = document.createElement('BUTTON');
+        botonAnterior.classList.add('btn', 'btnCambiarPagina');
+        botonAnterior.id = 'paginaAnterior';
+        botonAnterior.textContent = '<';
+        const botonPosterior = document.createElement('BUTTON');
+        botonPosterior.classList.add('btn', 'btnCambiarPagina');
+        botonPosterior.id = 'paginaSiguiente';
+        botonPosterior.textContent = '>';
+
+        const contenedorBotones = document.createElement('DIV');
+        for (let i = primeraPagBloque; i <= ultimaPagBloque; i++) {
+            const botonPagina = document.createElement('BUTTON');
+            botonPagina.id = i;
+            botonPagina.textContent = i;
+            botonPagina.classList.add('btn', 'btnPaginacion');
+            fragment.append(botonPagina);
+        }
+        contenedorBotones.append(fragment);
+        paginacionButtons.append(botonAnterior, contenedorBotones, botonPosterior);
+    }
+
     //Funcion Pintar imagenes:
-    const pintarImagenes = async (busqueda, numeroPagina, id = null, valorOrientacion = null) => {
+    const pintarImagenes = async () => {
         try {
+            errorDOM.innerHTML = '';
             containerGaleria.innerHTML = '';
-            const datos = await llamarApi(busqueda, numeroPagina, id, valorOrientacion);
-            const fotosTotales = datos.photos;
-            if (!fotosTotales || fotosTotales.length === 0) {  // si no existe, es null o indefined----o el array está vacío
+            const datos = await llamarApi();
+            if (!datos || datos.photos.length === 0) {
                 throw `No hay imágenes del tema ${busqueda}`;
             }
+            const fotosTotales = datos.photos;
             fotosTotales.forEach((foto => {
                 const articleGaleria = document.createElement('ARTICLE');
                 const divGaleria = document.createElement('DIV');
@@ -227,12 +269,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 fragment.append(articleGaleria);
             }));
             containerGaleria.append(fragment);
+            totalResultados = datos.total_results;
+            pintarBotones();
         } catch (error) {
-            escribirError();
-            console.error(error)
+            escribirError(error);
         }
     }
-
     // funcion getLocalStorage para VER = OBTENER lo que hay en favoritos:
     // localStorage.getItem devuelve string JSON o null si no hay nada 
     // .parse se convierte en array de objs
@@ -244,30 +286,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const setLocalStorage = (favoritos) =>
         localStorage.setItem("favoritos", JSON.stringify(favoritos));
 
-    // 5- Funcion addFavoritos
-    const addFavoritos = async (id) => {
-        const data = await llamarApi(null, null, id, null)
-        console.log(data)
-        const favoritos = getLocalStorage()
-        console.log(favoritos)
-        const existeFavorito = favoritos.find(foto => foto.id === id);
-        if (!existeFavorito) {
-            const nuevoFavorito =
-            {
-                id: data.id,
-                srcM: data.src.medium,
-                srcG: data.src.large,
-                alt: data.alt,
-                autor: data.photographer
-            };
-            setLocalStorage([...favoritos, nuevoFavorito]);
+    // 5- Funcion agregarFavoritos
+    const agregarFavoritos = async (id) => {
+        try {
+            const data = await llamarApi(id)
+            const favoritos = getLocalStorage()
+            const existeFavorito = favoritos.find(foto => foto.id == id);
+            if (!existeFavorito) {
+                const nuevoFavorito =
+                {
+                    id: data.id,
+                    srcM: data.src.medium,
+                    srcG: data.src.large,
+                    alt: data.alt,
+                    autor: data.photographer
+                };
+                setLocalStorage([...favoritos, nuevoFavorito]);
+            }
+        } catch (error) {
+            escribirError(error)
         }
+
     };
 
     // 6- Funcion pintarFavoritos()
-
     const pintarFavoritos = () => {
-        const favoritosActualizados = getLocalStorage()
+        containerFavoritos.innerHTML = '';
+        const favoritosActualizados = getLocalStorage();
         favoritosActualizados.forEach((objetoFotos) => {
             const articleFav = document.createElement('ARTICLE');
             const divFav = document.createElement('DIV');
@@ -275,10 +320,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const pDescripcionFav = document.createElement('P');
             const pautorFav = document.createElement('P');
             const botonEliminar = document.createElement('BUTTON');
+            const botonAmpliar = document.createElement('BUTTON');
 
             imgFav.alt = objetoFotos.alt;
             imgFav.src = objetoFotos.srcM;
-
             imgFav.id = objetoFotos.id;
             //divGaleria.classList.add('sizeImagen');
             pautorFav.textContent = `Autor: ${objetoFotos.autor} `;
@@ -287,6 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
             botonEliminar.textContent = "Eliminar";
             botonEliminar.classList.add('btn');
             botonEliminar.classList.add('elimBtn');
+            botonAmpliar.classList.add('btn');
+            botonAmpliar.textContent = "Ampliar";
             articleFav.classList.add('articleImg');
 
             divFav.append(imgFav);
@@ -296,6 +343,15 @@ document.addEventListener('DOMContentLoaded', () => {
         containerFavoritos.append(fragment);
     }
 
+    // 7- Funcion eliminarFavoritos()
+    const eliminarFavoritos = (id) => {
+        let favoritos = getLocalStorage();
+        favoritos = favoritos.filter((foto) => foto.id != id);
+        setLocalStorage(favoritos);
+        containerFavoritos.innerHTML = '';
+        pintarFavoritos();
+    };
+
     const init = () => {
         if (location.pathname.includes("favoritos")) {
             pintarFavoritos();
@@ -304,17 +360,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     init();
-
-    /*
-    7- Funcion eliminarFavoritos()
-
-    const eliminarFavoritos = (id) => {
-        console.log(id)
-        //Mirar local storage, buscar la imagen y eliminarla
-        //Volver a pintar
-    };
-    */
-
-    // 8- Funcion cambiarPagina()
-
 });

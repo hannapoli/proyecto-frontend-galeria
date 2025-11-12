@@ -19,9 +19,9 @@
         <!--DESPLEGABLE SELECCIONAR ORIENTACIÓN----->
         <select id="orientacion" class="orientacion" name="orientacion">
             <option value="opciones" disabled selected>Orientación</option>
-            <option value="todo" id="todo">Todo</option>
-            <option value="horizontal" id="horizontal">Horizontal</option>
-            <option value="vertical" id="vertical">Vertical</option>
+            <option value="" id="todo">Todo</option>
+            <option value="landscape" id="horizontal">Horizontal</option>
+            <option value="portrait" id="vertical">Vertical</option>
         </select>
 
         <nav class="menuNavegacion">
@@ -66,12 +66,15 @@
         </section>
         <!----------------------- PAGINACIÓN ------------------------->
         <nav id="paginacion">
-            <div class="contenedorPaginacion flexContainer" id="paginacion-buttons">
+            <div class="contenedorPaginacion flexContainer" id="paginacionButtons">
                 <!-- Meter los números de las páginas de forma dinámica: son tantos botones como págs queremos que se muestren. -->
-                <button class="btn btnPaginacion" id="paginaAnterior">
-                    < </button>
-                        <button class="btn btnPaginacion" id="paginaActual" value="1"> 1 </button>
-                        <button class="btn btnPaginacion" id="paginaSiguiente"> > </button>
+                <!-- <button class="btn btnCambiarPagina" id="paginaAnterior">
+                    &lt </button>
+                <div id="btnsPaginacion">
+                    <button class="btn btnPaginacion" id="1"></button>
+                    <button class="btn btnPaginacion" id="..."></button>
+                </div>
+                <button class="btn btnCambiarPagina" id="paginaSiguiente"> &gt </button> -->
             </div>
         </nav>
         <a href="#cajaCategorias" class="volver">Volver al principio</a>

@@ -180,7 +180,7 @@ select {
 }
 
 .btn:hover {
-    opacity: 0.9;
+    opacity: 0.7;
 }
 
 .imagenCategoria {
@@ -227,7 +227,8 @@ select {
 
 .favBtn,
 .elimBtn,
-.btnPaginacion {
+.btnPaginacion,
+.btnCambiarPagina {
     padding-inline: 0.8em;
     padding-block: 0.6em;
     background-color: #ff9d3a;
@@ -235,7 +236,8 @@ select {
     font-size: 1rem;
 }
 
-.btnPaginacion {
+.btnPaginacion,
+.btnCambiarPagina {
     margin-inline: 0.3em;
     margin-block: 1em;
     padding: 1em;
