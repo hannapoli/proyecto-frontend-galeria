@@ -10,6 +10,10 @@ body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
+main {
+    padding-block: 2em;
+}
+
 img {
     width: 100%;
 }
@@ -22,9 +26,9 @@ h3,
 }
 
 h1 {
-    margin-top: 1.2em;
+    margin-top: 0.8em;
     margin-bottom: 0.5em;
-    font-size: 1.6rem;
+    font-size: 2em;
     padding: 0.5em;
 }
 
@@ -66,6 +70,11 @@ footer * {
     font-weight: 500;
 }
 
+header a:hover,
+footer a:hover {
+    color: #f6b87a;
+}
+
 select {
     appearance: none;
     -webkit-appearence: none;
@@ -85,7 +94,7 @@ select {
 
 .fullContainer {
     width: 100%;
-    background-color: rgb(81, 81, 81);
+    background-color: rgb(58, 58, 58);
     height: 4em;
     justify-content: space-evenly;
     align-items: center;
@@ -124,6 +133,7 @@ select {
 .orientacion {
     padding-inline: 0.4em;
     padding-block: 0.1em;
+    text-align: center;
 }
 
 .cajaCategorias,
@@ -143,6 +153,7 @@ select {
     justify-content: center;
     flex-wrap: wrap;
     gap: 8px;
+    margin-block: 1.5em;
 }
 
 .tresCategorias h3 {
@@ -179,8 +190,13 @@ select {
     border: none;
 }
 
-.btn:hover {
-    opacity: 0.7;
+.btn:hover:not(.ampliarBtn) {
+    background-color: #ff952c;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.ampliarBtn:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .imagenCategoria {
@@ -231,8 +247,16 @@ select {
 .btnCambiarPagina {
     padding-inline: 0.8em;
     padding-block: 0.6em;
-    background-color: #ff9d3a;
-    color: white;
+    background-color: #faa44e;
+    font-size: 1rem;
+}
+
+.ampliarBtn {
+    padding-inline: 0.8em;
+    padding-block: 0.6em;
+    margin-inline: 1.5em;
+    background-color: white;
+    border: 1px solid black;
     font-size: 1rem;
 }
 
@@ -277,6 +301,51 @@ footer {
     border-color: #D83933;
 }
 
+/* ----POPUP DE IMAGEN AMPLIADA EN FAVORITOS-----*/
+.popup {
+  display: none; /* oculto por defecto */
+  position: fixed;
+  z-index: 100; /* se muestra por encima de todo */
+  inset: 0; /*para que cubra toda la ventana*/
+  justify-content: center;
+  align-items: center;
+}
+
+.popupContenido {
+  position: relative;
+  padding: 15px;
+  max-width: 90%;
+  max-height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+}
+
+.popupContenido img {
+  max-width: 100%;
+  max-height: 80%;
+  border-radius: 10px;
+}
+
+.popup-visible {
+    display: flex; /* clase que le daré en JS para que se muestre */
+}
+
+.cerrar {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  padding: 0.3em;
+  font-size: 2em;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 50%; /*para que el boton dde cerrar sea redondo*/
+}
+
+.cerrar:hover {
+  background: rgb(222, 107, 0);
+}
+
 /* ===============================
             768px
 =================================== */
@@ -289,7 +358,7 @@ footer {
     }
 
     h1 {
-        font-size: 2.2rem;
+        font-size: 3rem;
     }
 
     h2 {

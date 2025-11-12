@@ -10,7 +10,7 @@
 
 <body>
     <header class="headerFavoritos fullContainer flexContainer">
-        <p class="tituloWeb">Galería</p>
+        <p class="tituloWeb"><a href="../index.html">Galería</a></p>
         <!--MENÚ DE NAVEGACION-->
         <nav class="menuNavegacion">
             <ul>
@@ -33,11 +33,18 @@
 
         <a href="#favoritos" class="volver">Volver al principio</a>
     </main>
+    <!-- POPUP PARA AMPLIAR IMAGEN EN FAVORITOS-->
+    <div id="popup" class="popup">
+        <div class="popupContenido">
+            <span id="cerrarPopup" class="cerrar">x</span>
+            <img id="popupImg" src="" alt="Imagen ampliada"> <!--le doy el src desde JS-->
+        </div>
+    </div>
 
     <footer class="fullContainer flexContainer">
         <p> &copy; 2025 Hanna y Sonia</p>
         <p> Todos los derechos reservados</p>
-        <p> API de <a href="https://www.pexels.com/api/" target="_blank">Pexels</a></p>
+        <p><a href="https://www.pexels.com/api/" target="_blank">API de Pexels</a></p>
     </footer>
     <script src="../js/main.js"></script>
 </body>

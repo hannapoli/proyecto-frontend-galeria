@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let resultadosPorPagina = 12;
     let primeraPagBloque;
     let ultimaPagBloque;
+    const popup = document.querySelector("#popup");
+    const popupImg = document.querySelector("#popupImg");
+    const cerrarPopup = document.querySelector("#cerrarPopup");
 
     //EVENTOS
     /**
@@ -92,6 +95,25 @@ document.addEventListener('DOMContentLoaded', () => {
             paginaActual = ultimaPagBloque + 1;
             pintarImagenes();
             pintarBotones();
+        }
+
+        // Para que al pulsar el boton "Ampliar" se muestre en un "popup" la img de favoritos
+        if (ev.target.matches(".ampliarBtn")) {
+            const id = ev.target.id;
+            const favoritos = getLocalStorage();
+            const foto = favoritos.find(img => img.id == id);
+
+            if (foto) { // si existe una foto
+                popupImg.src = foto.srcG;
+                popupImg.alt = foto.alt;
+                popup.classList.add("popup-visible"); // para que se muestre el popup oculto por defecto
+            }
+        }
+
+        // Cerrar popup cuando pulsas la X 
+        if (ev.target === cerrarPopup) {
+            popupImg.src = ""; // limpiar imagen
+            popup.classList.remove("popup-visible"); // para que deje de mostrarse
         }
     });
 
@@ -332,12 +354,13 @@ document.addEventListener('DOMContentLoaded', () => {
             botonEliminar.textContent = "Eliminar";
             botonEliminar.classList.add('btn');
             botonEliminar.classList.add('elimBtn');
-            botonAmpliar.classList.add('btn');
-            botonAmpliar.textContent = "Ampliar";
+            botonAmpliar.id = objetoFotos.id;
+            botonAmpliar.classList.add('btn', 'ampliarBtn');
+            botonAmpliar.textContent = "Ampliar 🔍";
             articleFav.classList.add('articleImg');
 
             divFav.append(imgFav);
-            articleFav.append(divFav, pDescripcionFav, pautorFav, botonEliminar);
+            articleFav.append(divFav, pDescripcionFav, pautorFav, botonEliminar, botonAmpliar);
             fragment.append(articleFav);
         })
         containerFavoritos.append(fragment);
